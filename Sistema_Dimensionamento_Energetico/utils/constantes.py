@@ -54,10 +54,17 @@ ARQUIVO_DADOS = "dados.json"
 
 
 # Nome dos datasets utilizados pelo sistema.
-ARQUIVO_PAINEIS = "datasets/paineis.csv"
-ARQUIVO_INVERSORES = "datasets/inversores.csv"
-ARQUIVO_BATERIAS = "datasets/baterias.csv"
-ARQUIVO_HSP = "datasets/hsp.csv"
+from pathlib import Path
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATASETS_DIR = BASE_DIR / "datasets"
+
+ARQUIVO_HSP = DATASETS_DIR / "hsp.csv"
+ARQUIVO_PAINEIS = DATASETS_DIR / "paineis.csv"
+ARQUIVO_INVERSORES = DATASETS_DIR / "inversores.csv"
+ARQUIVO_BATERIAS = DATASETS_DIR / "baterias.csv"
 
 
 # ============================================================

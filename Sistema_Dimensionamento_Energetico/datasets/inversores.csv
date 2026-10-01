@@ -1,0 +1,11 @@
+fabricante,modelo,potencia_nominal_kw,potencia_fv_max_kw,tensao_min_v,tensao_max_v,corrente_max_a,mppt,compatibilidade_bateria,preco,fonte
+Growatt,MIN 2500TL-X,2.5,3.5,80,500,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
+Growatt,MIN 3000TL-X,3.0,4.2,80,500,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
+Growatt,MIN 3600TL-X,3.6,5.04,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
+Growatt,MIN 4200TL-X,4.2,5.88,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
+Growatt,MIN 4600TL-X,4.6,6.44,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
+Growatt,MIN 5000TL-X,5.0,7.0,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
+Growatt,MIN 6000TL-X,6.0,8.1,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
+Deye,SUN-3.6K-G05P1-EU-CM2,3.6,5.4,80,500,13.0,2 MPPT,Não aplicável,,https://pt.deyeinverter.com/product/single-phase-string-inverter/SUN3-6-4-4-2-4-6-5-5-2-3171.html
+Deye,SUN-5K-G05P1-EU-CM2,5.0,7.5,80,550,13.0,2 MPPT,Não aplicável,,https://pt.deyeinverter.com/product/single-phase-string-inverter/SUN3-6-4-4-2-4-6-5-5-2-3171.html
+Deye,SUN-8K-G05P1-EU-CM2,8.0,12.0,80,550,26.0,2 MPPT,Não aplicável,,https://pt.deyeinverter.com/product/single-phase-string-inverter/SUN3-6-4-4-2-4-6-5-5-2-3171.html

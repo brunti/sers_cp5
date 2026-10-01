@@ -17,6 +17,7 @@ from services.equipamentos import (
     obter_hsp,
     dimensionar_paineis,
     selecionar_painel,
+    selecionar_inversor,
 )
 
 
@@ -455,5 +456,51 @@ def executar_pb05(
     resultado.potencia_instalada = (
         dimensionamento["potencia_instalada"]
     )
+
+    return resultado
+
+# ============================================================
+# PB06 - SELEÇÃO DO INVERSOR
+# ============================================================
+
+def executar_pb06(
+    resultado,
+    fabricante=None,
+    modelo=None,
+):
+    """
+    Executa o PB06.
+
+    Seleciona um inversor considerando a potência
+    instalada do sistema FV.
+
+    A compatibilidade elétrica detalhada será
+    realizada posteriormente pelo PB10.
+    """
+
+    if resultado is None:
+        raise ValueError(
+            "Resultado de dimensionamento "
+            "não informado."
+        )
+
+    if resultado.potencia_instalada <= 0:
+        raise ValueError(
+            "A potência instalada dos painéis "
+            "deve ser maior que zero."
+        )
+
+    inversor = selecionar_inversor(
+        potencia_instalada=(
+            resultado.potencia_instalada
+        ),
+        fabricante=fabricante,
+        modelo=modelo,
+    )
+
+    if inversor is None:
+        return None
+
+    resultado.inversor = inversor
 
     return resultado
