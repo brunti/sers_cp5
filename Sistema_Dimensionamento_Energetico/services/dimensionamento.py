@@ -2,7 +2,7 @@
 # SERVIÇO DE DIMENSIONAMENTO ENERGÉTICO
 # ============================================================
 
-from services.equipamentos import obter_hsp
+
 
 from models.resultado import ResultadoDimensionamento
 from utils.constantes import (
@@ -12,6 +12,12 @@ from utils.constantes import (
     PERCENTUAL_MAXIMO,
 )
 from utils.validacoes import ler_percentual
+
+from services.equipamentos import (
+    obter_hsp,
+    dimensionar_paineis,
+    selecionar_painel,
+)
 
 
 # ============================================================
@@ -392,6 +398,62 @@ def obter_hsp_imovel(imovel):
     resultado = obter_hsp(
         imovel.cidade,
         imovel.estado
+    )
+
+    return resultado
+
+# ============================================================
+# PB05 - SELEÇÃO E DIMENSIONAMENTO DOS PAINÉIS
+# ============================================================
+
+def executar_pb05(
+    resultado,
+    fabricante=None,
+    modelo=None,
+):
+    """
+    Executa o PB05 completo:
+
+        1. Seleciona o painel.
+        2. Calcula a quantidade necessária.
+        3. Calcula a potência instalada.
+        4. Atualiza o ResultadoDimensionamento.
+
+    Retorna:
+        ResultadoDimensionamento atualizado.
+
+    Retorna None caso nenhum painel esteja disponível.
+    """
+
+    if resultado is None:
+        raise ValueError(
+            "Resultado de dimensionamento não informado."
+        )
+
+    painel = selecionar_painel(
+        potencia_fv=resultado.potencia_fv,
+        fabricante=fabricante,
+        modelo=modelo,
+    )
+
+    if painel is None:
+        return None
+
+    dimensionamento = dimensionar_paineis(
+        potencia_fv=resultado.potencia_fv,
+        painel=painel,
+    )
+
+    resultado.painel = (
+        dimensionamento["painel"]
+    )
+
+    resultado.quantidade_paineis = (
+        dimensionamento["quantidade_paineis"]
+    )
+
+    resultado.potencia_instalada = (
+        dimensionamento["potencia_instalada"]
     )
 
     return resultado
