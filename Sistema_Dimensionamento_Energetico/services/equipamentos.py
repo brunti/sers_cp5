@@ -619,28 +619,29 @@ def selecionar_inversor(
     potencia_instalada,
     fabricante=None,
     modelo=None,
+    possui_bateria=False,
 ):
     """
     Seleciona um inversor para o sistema fotovoltaico.
 
-    A seleção considera a potência FV instalada e
-    a potência FV máxima suportada pelo inversor.
-
-    A compatibilidade elétrica detalhada será realizada
-    posteriormente pelo PB10.
-
-    Retorna:
-        dicionário do inversor selecionado
-
-    Retorna None quando nenhum inversor adequado for
-    encontrado.
+    Regras:
+        - A potência FV instalada deve ser <= potência FV máxima
+          suportada pelo inversor.
+        - Se houver bateria, somente inversores explicitamente
+          compatíveis com bateria podem ser selecionados.
+        - Fabricante e modelo podem ser utilizados como filtros.
+        - Entre os candidatos válidos, seleciona o menor inversor
+          pela potência nominal.
     """
+
+    # ========================================================
+    # VALIDAÇÃO DA POTÊNCIA
+    # ========================================================
 
     try:
         potencia_instalada = float(
             potencia_instalada
         )
-
     except (TypeError, ValueError):
         raise ValueError(
             "A potência instalada deve ser numérica."
@@ -651,19 +652,34 @@ def selecionar_inversor(
             "A potência instalada deve ser maior que zero."
         )
 
+    # ========================================================
+    # OBTÉM OS INVERSORES
+    # ========================================================
+
     inversores = listar_inversores()
 
     if not inversores:
-        print(
-            "\nNenhum inversor válido "
-            "está disponível."
-        )
-
         return None
+
+    # ========================================================
+    # NORMALIZAÇÃO DA NECESSIDADE DE BATERIA
+    # ========================================================
+
+    possui_bateria = bool(
+        possui_bateria
+    )
 
     candidatos = []
 
+    # ========================================================
+    # PERCORRE OS INVERSORES
+    # ========================================================
+
     for inversor in inversores:
+
+        # ----------------------------------------------------
+        # FABRICANTE
+        # ----------------------------------------------------
 
         fabricante_inversor = str(
             inversor.get(
@@ -672,6 +688,19 @@ def selecionar_inversor(
             )
         ).strip()
 
+        if fabricante is not None:
+
+            if fabricante_inversor.lower() != (
+                str(fabricante)
+                .strip()
+                .lower()
+            ):
+                continue
+
+        # ----------------------------------------------------
+        # MODELO
+        # ----------------------------------------------------
+
         modelo_inversor = str(
             inversor.get(
                 "modelo",
@@ -679,21 +708,21 @@ def selecionar_inversor(
             )
         ).strip()
 
-        if fabricante is not None:
-
-            if fabricante_inversor.lower() != (
-                str(fabricante).strip().lower()
-            ):
-                continue
-
         if modelo is not None:
 
             if modelo_inversor.lower() != (
-                str(modelo).strip().lower()
+                str(modelo)
+                .strip()
+                .lower()
             ):
                 continue
 
+        # ----------------------------------------------------
+        # POTÊNCIA FV MÁXIMA
+        # ----------------------------------------------------
+
         try:
+
             potencia_nominal_kw = float(
                 str(
                     inversor[
@@ -710,14 +739,59 @@ def selecionar_inversor(
                 ).replace(",", ".")
             )
 
-        except (TypeError, ValueError, KeyError):
+        except (
+            TypeError,
+            ValueError,
+            KeyError,
+        ):
             continue
 
-        # A potência FV instalada não pode
-        # ultrapassar a potência FV máxima
-        # suportada pelo inversor.
+        # O inversor precisa suportar a potência
+        # FV instalada.
+
         if potencia_fv_max_kw < potencia_instalada:
             continue
+
+        # ----------------------------------------------------
+        # COMPATIBILIDADE COM BATERIA
+        # ----------------------------------------------------
+
+        compatibilidade_bateria = str(
+            inversor.get(
+                "compatibilidade_bateria",
+                ""
+            )
+        ).strip().lower()
+
+        valores_compativeis = [
+            "sim",
+            "yes",
+            "true",
+            "1",
+            "compatível",
+            "compativel",
+        ]
+
+        bateria_compativel = (
+            compatibilidade_bateria
+            in valores_compativeis
+        )
+
+        # ----------------------------------------------------
+        # SE O SISTEMA POSSUI BATERIA
+        # ----------------------------------------------------
+
+        if possui_bateria:
+
+            # Só aceita inversor explicitamente
+            # compatível com bateria.
+
+            if not bateria_compativel:
+                continue
+
+        # ----------------------------------------------------
+        # CANDIDATO VÁLIDO
+        # ----------------------------------------------------
 
         candidatos.append(
             (
@@ -727,16 +801,26 @@ def selecionar_inversor(
             )
         )
 
+    # ========================================================
+    # NENHUM INVERSOR ENCONTRADO
+    # ========================================================
+
     if not candidatos:
         return None
 
-    # Seleciona primeiro pelo menor valor de
-    # potência nominal que atende ao sistema.
+    # ========================================================
+    # ORDENAÇÃO
+    # ========================================================
+
     candidatos.sort(
         key=lambda item: (
             item[0],
             item[1],
         )
     )
+
+    # ========================================================
+    # RETORNO
+    # ========================================================
 
     return candidatos[0][2]

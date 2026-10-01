@@ -476,11 +476,13 @@ def executar_pb06(
     """
     Executa o PB06.
 
-    Seleciona um inversor considerando a potência
-    instalada do sistema FV.
+    Seleciona um inversor considerando:
+        - potência FV instalada
+        - necessidade de bateria
 
-    A compatibilidade elétrica detalhada será
-    realizada posteriormente pelo PB10.
+    Se resultado.possui_bateria for True,
+    somente inversores compatíveis com bateria
+    serão considerados.
     """
 
     if resultado is None:
@@ -495,12 +497,21 @@ def executar_pb06(
             "deve ser maior que zero."
         )
 
+    possui_bateria = bool(
+        getattr(
+            resultado,
+            "possui_bateria",
+            False,
+        )
+    )
+
     inversor = selecionar_inversor(
         potencia_instalada=(
             resultado.potencia_instalada
         ),
         fabricante=fabricante,
         modelo=modelo,
+        possui_bateria=possui_bateria,
     )
 
     if inversor is None:
@@ -518,12 +529,12 @@ def executar_pb10(resultado):
     """
     Executa o PB10.
 
-    Verifica a compatibilidade entre o painel
-    selecionado no PB05 e o inversor selecionado
-    no PB06.
+    Verifica a compatibilidade entre:
+        - painel selecionado no PB05;
+        - inversor selecionado no PB06;
+        - bateria selecionada no armazenamento, quando houver.
 
-    O resultado da verificação é armazenado no
-    ResultadoDimensionamento.
+    Utiliza a quantidade real de painéis definida no PB05.
 
     Retorna:
         ResultadoDimensionamento atualizado.
@@ -545,9 +556,42 @@ def executar_pb10(resultado):
             "Nenhum inversor foi selecionado."
         )
 
+    quantidade_paineis = getattr(
+        resultado,
+        "quantidade_paineis",
+        0,
+    )
+
+    if quantidade_paineis <= 0:
+        raise ValueError(
+            "A quantidade de painéis deve ser "
+            "maior que zero."
+        )
+
+    bateria = None
+
+    if getattr(
+        resultado,
+        "possui_bateria",
+        False,
+    ):
+        bateria = getattr(
+            resultado,
+            "baterias",
+            None,
+        )
+
+        if bateria is None:
+            raise ValueError(
+                "O sistema foi configurado com bateria, "
+                "mas nenhum equipamento de bateria foi selecionado."
+            )
+
     compatibilidade = verificar_compatibilidade(
         painel=resultado.painel,
         inversor=resultado.inversor,
+        quantidade_paineis=quantidade_paineis,
+        bateria=bateria,
     )
 
     resultado.compatibilidade = compatibilidade
@@ -658,5 +702,140 @@ def executar_armazenamento(
     resultado.capacidade_bateria_instalada = (
         dimensionamento["capacidade_instalada"]
     )
+
+    return resultado
+
+def calcular_geracao_estimada(
+    potencia_instalada,
+    hsp,
+    dias_periodo=30,
+    eficiencia=0.8,
+):
+    """
+    Estima a geração de energia do sistema FV
+    no período informado.
+
+    Retorno:
+        energia estimada em kWh.
+    """
+
+    try:
+        potencia_instalada = float(potencia_instalada)
+        hsp = float(hsp)
+        dias_periodo = float(dias_periodo)
+        eficiencia = float(eficiencia)
+
+    except (TypeError, ValueError):
+        return 0.0
+
+    if (
+        potencia_instalada <= 0
+        or hsp <= 0
+        or dias_periodo <= 0
+        or eficiencia <= 0
+    ):
+        return 0.0
+
+    return (
+        potencia_instalada
+        * hsp
+        * dias_periodo
+        * eficiencia
+    )
+
+def calcular_custos(resultado):
+    """
+    Calcula os custos dos equipamentos
+    e o custo total do sistema.
+    """
+
+    if resultado is None:
+        raise ValueError(
+            "Resultado de dimensionamento não informado."
+        )
+
+    custo_paineis = 0.0
+    custo_inversor = 0.0
+    custo_baterias = 0.0
+
+    # PAINÉIS
+    if resultado.painel is not None:
+        preco_painel = resultado.painel.get("preco")
+
+        if preco_painel is not None and str(preco_painel).strip() != "":
+            try:
+                preco_painel = float(
+                    str(preco_painel).replace(",", ".")
+                )
+
+                if preco_painel >= 0:
+                    custo_paineis = (
+                        preco_painel
+                        * resultado.quantidade_paineis
+                    )
+
+            except (TypeError, ValueError):
+                custo_paineis = 0.0
+
+    # INVERSOR
+    if resultado.inversor is not None:
+        preco_inversor = resultado.inversor.get("preco")
+
+        if preco_inversor is not None and str(preco_inversor).strip() != "":
+            try:
+                preco_inversor = float(
+                    str(preco_inversor).replace(",", ".")
+                )
+
+                if preco_inversor >= 0:
+                    custo_inversor = preco_inversor
+
+            except (TypeError, ValueError):
+                custo_inversor = 0.0
+
+    # BATERIAS
+    if (
+        resultado.possui_bateria
+        and resultado.baterias is not None
+    ):
+        preco_bateria = resultado.baterias.get("preco")
+
+        if preco_bateria is not None and str(preco_bateria).strip() != "":
+            try:
+                preco_bateria = float(
+                    str(preco_bateria).replace(",", ".")
+                )
+
+                if preco_bateria >= 0:
+                    custo_baterias = (
+                        preco_bateria
+                        * resultado.quantidade_baterias
+                    )
+
+            except (TypeError, ValueError):
+                custo_baterias = 0.0
+
+    # CUSTOS ADICIONAIS
+    try:
+        custos_adicionais = float(
+            resultado.custos_adicionais or 0
+        )
+    except (TypeError, ValueError):
+        custos_adicionais = 0.0
+
+    # TOTAL
+    custo_total = (
+        custo_paineis
+        + custo_inversor
+        + custo_baterias
+        + custos_adicionais
+    )
+
+    # ATUALIZA O RESULTADO
+    resultado.custo_paineis = custo_paineis
+    resultado.custo_inversor = custo_inversor
+    resultado.custo_baterias = custo_baterias
+    resultado.custos_adicionais = custos_adicionais
+    resultado.custo_total = custo_total
 
     return resultado

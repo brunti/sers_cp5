@@ -103,18 +103,19 @@ def verificar_compatibilidade(
     painel,
     inversor,
     quantidade_paineis=1,
+    bateria=None,
 ):
     """
-    Verifica a compatibilidade elétrica básica entre
-    os painéis e o inversor.
+    Verifica a compatibilidade técnica entre:
 
-    A tensão da string considera a quantidade de
-    painéis conectados em série.
+    - painéis e inversor;
+    - bateria e inversor, quando houver bateria.
 
     Critérios:
-
-    1. Tensão da string dentro da faixa do inversor.
-    2. Corrente do painel dentro do limite do inversor.
+        1. Tensão da string dentro da faixa do inversor.
+        2. Corrente do painel dentro do limite do inversor.
+        3. Compatibilidade do inversor com bateria,
+           quando houver bateria.
     """
 
     problemas = validar_dados_compatibilidade(
@@ -159,9 +160,9 @@ def verificar_compatibilidade(
         inversor["corrente_max_a"]
     )
 
-    # --------------------------------------------------------
+    # ========================================================
     # TENSÃO DA STRING
-    # --------------------------------------------------------
+    # ========================================================
 
     tensao_string = (
         tensao_painel
@@ -174,9 +175,9 @@ def verificar_compatibilidade(
         <= tensao_max_inversor
     )
 
-    # --------------------------------------------------------
+    # ========================================================
     # CORRENTE
-    # --------------------------------------------------------
+    # ========================================================
 
     corrente_compativel = (
         corrente_painel
@@ -186,23 +187,62 @@ def verificar_compatibilidade(
     problemas = []
 
     if not tensao_compativel:
-
         problemas.append(
             "A tensão da string está fora "
             "da faixa aceita pelo inversor."
         )
 
     if not corrente_compativel:
-
         problemas.append(
             "A corrente do painel excede "
             "o limite do inversor."
         )
 
+    # ========================================================
+    # BATERIA
+    # ========================================================
+
+    bateria_compativel = True
+
+    if bateria is not None:
+
+        compatibilidade_bateria = str(
+            inversor.get(
+                "compatibilidade_bateria",
+                ""
+            )
+        ).strip().lower()
+
+        valores_nao_compativeis = [
+            "",
+            "não",
+            "nao",
+            "não aplicável",
+            "nao aplicavel",
+            "não aplicavel",
+            "nao aplicável",
+        ]
+
+        if (
+            compatibilidade_bateria
+            in valores_nao_compativeis
+        ):
+            bateria_compativel = False
+
+            problemas.append(
+                "O inversor selecionado "
+                "não é compatível com bateria."
+            )
+
+    # ========================================================
+    # RESULTADO
+    # ========================================================
+
     return {
         "compativel": (
             tensao_compativel
             and corrente_compativel
+            and bateria_compativel
         ),
 
         "problemas": problemas,
@@ -212,25 +252,28 @@ def verificar_compatibilidade(
                 "painel_v": tensao_painel,
                 "quantidade_paineis": quantidade_paineis,
                 "string_v": tensao_string,
-                "min_inversor_v": (
-                    tensao_min_inversor
-                ),
-                "max_inversor_v": (
-                    tensao_max_inversor
-                ),
-                "compativel": (
-                    tensao_compativel
-                ),
+                "min_inversor_v": tensao_min_inversor,
+                "max_inversor_v": tensao_max_inversor,
+                "compativel": tensao_compativel,
             },
 
             "corrente": {
                 "painel_a": corrente_painel,
-                "max_inversor_a": (
-                    corrente_max_inversor
+                "max_inversor_a": corrente_max_inversor,
+                "compativel": corrente_compativel,
+            },
+
+            "bateria": {
+                "possui_bateria": (
+                    bateria is not None
                 ),
-                "compativel": (
-                    corrente_compativel
+                "compatibilidade_inversor": (
+                    inversor.get(
+                        "compatibilidade_bateria",
+                        ""
+                    )
                 ),
+                "compativel": bateria_compativel,
             },
         },
     }
