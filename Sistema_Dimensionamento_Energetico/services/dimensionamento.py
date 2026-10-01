@@ -20,6 +20,11 @@ from services.equipamentos import (
     selecionar_inversor,
 )
 
+from services.compatibilidade import (
+    verificar_compatibilidade,
+)
+
+from services.baterias import dimensionar_armazenamento, dimensionar_baterias
 
 # ============================================================
 # PB01 - CONSUMO DE REFERÊNCIA
@@ -502,5 +507,156 @@ def executar_pb06(
         return None
 
     resultado.inversor = inversor
+
+    return resultado
+
+# ============================================================
+# PB10 - VERIFICAÇÃO DE COMPATIBILIDADE
+# ============================================================
+
+def executar_pb10(resultado):
+    """
+    Executa o PB10.
+
+    Verifica a compatibilidade entre o painel
+    selecionado no PB05 e o inversor selecionado
+    no PB06.
+
+    O resultado da verificação é armazenado no
+    ResultadoDimensionamento.
+
+    Retorna:
+        ResultadoDimensionamento atualizado.
+    """
+
+    if resultado is None:
+        raise ValueError(
+            "Resultado de dimensionamento "
+            "não informado."
+        )
+
+    if resultado.painel is None:
+        raise ValueError(
+            "Nenhum painel foi selecionado."
+        )
+
+    if resultado.inversor is None:
+        raise ValueError(
+            "Nenhum inversor foi selecionado."
+        )
+
+    compatibilidade = verificar_compatibilidade(
+        painel=resultado.painel,
+        inversor=resultado.inversor,
+    )
+
+    resultado.compatibilidade = compatibilidade
+
+    return resultado
+
+# ============================================================
+# PB08 + PB09 - INTEGRAÇÃO DO ARMAZENAMENTO
+# ============================================================
+
+def executar_armazenamento(
+    resultado,
+    autonomia_horas,
+    fabricante=None,
+    modelo=None,
+    dod=0.80,
+    eficiencia_bateria=0.90,
+):
+    """
+    Executa o PB08 e o PB09 e atualiza o
+    ResultadoDimensionamento.
+
+    Parâmetros:
+        resultado:
+            ResultadoDimensionamento já criado.
+
+        autonomia_horas:
+            Autonomia desejada em horas.
+
+        fabricante/modelo:
+            Filtros opcionais para seleção da bateria.
+
+        dod:
+            Profundidade de descarga utilizada no dimensionamento.
+
+        eficiencia_bateria:
+            Eficiência considerada no dimensionamento.
+
+    Retorna:
+        ResultadoDimensionamento atualizado.
+    """
+
+    if resultado is None:
+        raise ValueError(
+            "Resultado de dimensionamento "
+            "não informado."
+        )
+
+    # --------------------------------------------------------
+    # PB08 - Dimensionamento da capacidade necessária
+    # --------------------------------------------------------
+
+    armazenamento = dimensionar_armazenamento(
+        consumo_referencia=(
+            resultado.consumo_referencia
+        ),
+        autonomia_horas=autonomia_horas,
+        dod=dod,
+        eficiencia_bateria=eficiencia_bateria,
+        dias=resultado.dias_periodo,
+    )
+
+    # --------------------------------------------------------
+    # Atualiza dados do PB08
+    # --------------------------------------------------------
+
+    resultado.possui_bateria = True
+
+    resultado.autonomia_horas = (
+        armazenamento["autonomia_horas"]
+    )
+
+    resultado.capacidade_bateria_necessaria = (
+        armazenamento["capacidade_necessaria"]
+    )
+
+    # --------------------------------------------------------
+    # PB09 - Seleção e quantidade de baterias
+    # --------------------------------------------------------
+
+    dimensionamento = dimensionar_baterias(
+        capacidade_necessaria=(
+            armazenamento["capacidade_necessaria"]
+        ),
+        fabricante=fabricante,
+        modelo=modelo,
+    )
+
+    if dimensionamento is None:
+        resultado.baterias = None
+        resultado.quantidade_baterias = 0
+        resultado.capacidade_bateria_instalada = 0.0
+
+        return resultado
+
+    # --------------------------------------------------------
+    # Atualiza dados do PB09
+    # --------------------------------------------------------
+
+    resultado.baterias = (
+        dimensionamento["bateria"]
+    )
+
+    resultado.quantidade_baterias = (
+        dimensionamento["quantidade"]
+    )
+
+    resultado.capacidade_bateria_instalada = (
+        dimensionamento["capacidade_instalada"]
+    )
 
     return resultado

@@ -500,7 +500,11 @@ def validar_inversor(inversor):
     campos_obrigatorios = [
         "fabricante",
         "modelo",
-        "potencia_kw",
+        "potencia_nominal_kw",
+        "potencia_fv_max_kw",
+        "tensao_min_v",
+        "tensao_max_v",
+        "corrente_max_a",
     ]
 
     for campo in campos_obrigatorios:
@@ -512,21 +516,70 @@ def validar_inversor(inversor):
             )
 
     try:
-        potencia_kw = float(
+        potencia_nominal_kw = float(
             str(
-                inversor["potencia_kw"]
+                inversor["potencia_nominal_kw"]
+            ).replace(",", ".")
+        )
+
+        potencia_fv_max_kw = float(
+            str(
+                inversor["potencia_fv_max_kw"]
+            ).replace(",", ".")
+        )
+
+        tensao_min_v = float(
+            str(
+                inversor["tensao_min_v"]
+            ).replace(",", ".")
+        )
+
+        tensao_max_v = float(
+            str(
+                inversor["tensao_max_v"]
+            ).replace(",", ".")
+        )
+
+        corrente_max_a = float(
+            str(
+                inversor["corrente_max_a"]
             ).replace(",", ".")
         )
 
     except (TypeError, ValueError):
         raise ValueError(
-            "A potência do inversor deve ser numérica."
+            "Os dados elétricos do inversor "
+            "devem ser numéricos."
         )
 
-    if potencia_kw <= 0:
+    if potencia_nominal_kw <= 0:
         raise ValueError(
-            "A potência do inversor deve ser "
-            "maior que zero."
+            "A potência nominal do inversor "
+            "deve ser maior que zero."
+        )
+
+    if potencia_fv_max_kw <= 0:
+        raise ValueError(
+            "A potência FV máxima do inversor "
+            "deve ser maior que zero."
+        )
+
+    if tensao_min_v <= 0:
+        raise ValueError(
+            "A tensão mínima do inversor "
+            "deve ser maior que zero."
+        )
+
+    if tensao_max_v <= tensao_min_v:
+        raise ValueError(
+            "A tensão máxima do inversor "
+            "deve ser maior que a tensão mínima."
+        )
+
+    if corrente_max_a <= 0:
+        raise ValueError(
+            "A corrente máxima do inversor "
+            "deve ser maior que zero."
         )
 
     return True
@@ -570,8 +623,8 @@ def selecionar_inversor(
     """
     Seleciona um inversor para o sistema fotovoltaico.
 
-    A seleção considera inicialmente a potência instalada
-    do campo fotovoltaico.
+    A seleção considera a potência FV instalada e
+    a potência FV máxima suportada pelo inversor.
 
     A compatibilidade elétrica detalhada será realizada
     posteriormente pelo PB10.
@@ -641,32 +694,49 @@ def selecionar_inversor(
                 continue
 
         try:
-            potencia_inversor = float(
+            potencia_nominal_kw = float(
                 str(
-                    inversor["potencia_kw"]
+                    inversor[
+                        "potencia_nominal_kw"
+                    ]
                 ).replace(",", ".")
             )
 
-        except (TypeError, ValueError):
+            potencia_fv_max_kw = float(
+                str(
+                    inversor[
+                        "potencia_fv_max_kw"
+                    ]
+                ).replace(",", ".")
+            )
+
+        except (TypeError, ValueError, KeyError):
             continue
 
-        # O inversor precisa possuir potência suficiente
-        # para o sistema fotovoltaico.
-        if potencia_inversor >= potencia_instalada:
-            candidatos.append(
-                (
-                    potencia_inversor,
-                    inversor,
-                )
+        # A potência FV instalada não pode
+        # ultrapassar a potência FV máxima
+        # suportada pelo inversor.
+        if potencia_fv_max_kw < potencia_instalada:
+            continue
+
+        candidatos.append(
+            (
+                potencia_nominal_kw,
+                potencia_fv_max_kw,
+                inversor,
             )
+        )
 
     if not candidatos:
         return None
 
-    # Seleciona o menor inversor que atende
-    # à potência instalada.
+    # Seleciona primeiro pelo menor valor de
+    # potência nominal que atende ao sistema.
     candidatos.sort(
-        key=lambda item: item[0]
+        key=lambda item: (
+            item[0],
+            item[1],
+        )
     )
 
-    return candidatos[0][1]
+    return candidatos[0][2]

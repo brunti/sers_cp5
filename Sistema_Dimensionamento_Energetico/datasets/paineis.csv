@@ -1,11 +1,11 @@
-fabricante,modelo,potencia_wp,tensao_v,corrente_a,eficiencia,preco,fonte
-JA Solar,JAM72D30-525/MB,525,41.15,12.76,20.3,,https://www.jasolar.com/uploadfile/2021/1129/20211129023646263.pdf
-JA Solar,JAM72D30-530/MB,530,41.31,12.83,20.5,,https://www.jasolar.com/uploadfile/2021/1129/20211129023646263.pdf
-JA Solar,JAM72D30-535/MB,535,41.47,12.9,20.6,,https://www.jasolar.com/uploadfile/2021/1129/20211129023646263.pdf
-JA Solar,JAM72D30-540/MB,540,41.64,12.97,20.8,,https://www.jasolar.com/uploadfile/2021/1129/20211129023646263.pdf
-JA Solar,JAM72D30-545/MB,545,41.8,13.04,21.0,,https://www.jasolar.com/uploadfile/2021/1129/20211129023646263.pdf
-JA Solar,JAM72D30-550/MB,550,41.96,13.11,21.2,,https://www.jasolar.com/uploadfile/2021/1129/20211129023646263.pdf
-JA Solar,JAM72D40-555/GB,555,42.24,13.14,21.5,,https://www.jasolar.com/uploadfile/2022/1124/20221124101212393.pdf
-JA Solar,JAM72D40-560/GB,560,42.4,13.21,21.7,,https://www.jasolar.com/uploadfile/2022/1124/20221124101212393.pdf
-JA Solar,JAM72D40-565/GB,565,42.55,13.28,21.9,,https://www.jasolar.com/uploadfile/2022/1124/20221124101212393.pdf
-JA Solar,JAM72D40-570/GB,570,42.7,13.35,22.1,,https://www.jasolar.com/uploadfile/2022/1124/20221124101212393.pdf
+﻿fabricante,modelo,potencia_wp,tensao_v,corrente_a,eficiencia,preco,fonte
+JA Solar,JAM72D30-540/MB,540,41.64,12.97,20.8,790.5,https://www.energiatotal.com.br/ja-solar
+JA Solar,JAM72D30-545/MB,545,41.8,13.04,21.0,873.27,https://www.energiatotal.com.br/ja-solar
+Canadian Solar,CS6W 550MS,550,41.7,13.2,,660.3,https://www.minhacasasolar.com.br/painel-solar-canadian-monocristalino-550w-half-cell-cs6w-550ms-83846
+Sunova,SS-555-72MDH,555,40.83,13.48,21.3,549.0,https://www.minhacasasolar.com.br/painel-solar-555w-monocristalino-half-cell-sunova-ss-555-72mdh-83289
+ReneSola,RS6-555M-E3,555,42.1,13.19,21.48,535.0,https://www.minhacasasolar.com.br/painel-solar-555w-monocristalino-half-cell-renesola-rs6-555m-e3-82331
+Ronma,RM-620-182R/132TB,620,41.4,14.99,23.0,809.1,https://www.minhacasasolar.com.br/painel-solar-monocristalino-620w-bifacial-ronma-rm-620-182r-132tb-84501
+Honor,HY-M12/132H-700,700,40.0,17.5,21.28,882.57,https://www.minhacasasolar.com.br/painel-solar-monocristalino-700w-half-cell-honor-hy-m12-132h-700-84353
+OSDA,ODA610-33V-MHDRZ,610,40.46,15.08,,655.65,https://www.minhacasasolar.com.br/painel-solar-monocristalino-610w-bifacial-osda-oda610-33v-mhdrz-83802
+OSDA,ODA550-36V-MHD,550,42.1,13.06,21.28,1133.67,https://www.minhacasolar.com.br/painel-solar-550w-monocristalino-osda-oda550-36v-mhd-81823
+Maxeon,SPR-P6-550-UPP,550,39.7,13.85,,627.75,https://www.minhacasolar.com.br/painel-solar

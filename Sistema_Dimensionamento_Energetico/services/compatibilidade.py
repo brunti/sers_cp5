@@ -102,20 +102,19 @@ def validar_dados_compatibilidade(
 def verificar_compatibilidade(
     painel,
     inversor,
+    quantidade_paineis=1,
 ):
     """
     Verifica a compatibilidade elétrica básica entre
-    o painel selecionado e o inversor.
+    os painéis e o inversor.
 
-    Critérios utilizados:
+    A tensão da string considera a quantidade de
+    painéis conectados em série.
 
-    1. Tensão do painel dentro da faixa aceita
-       pelo inversor.
+    Critérios:
 
-    2. Corrente do painel dentro do limite aceito
-       pelo inversor.
-
-    Retorna um dicionário detalhado.
+    1. Tensão da string dentro da faixa do inversor.
+    2. Corrente do painel dentro do limite do inversor.
     """
 
     problemas = validar_dados_compatibilidade(
@@ -124,12 +123,21 @@ def verificar_compatibilidade(
     )
 
     if problemas:
-
         return {
             "compativel": False,
             "problemas": problemas,
             "criterios": {},
         }
+
+    try:
+        quantidade_paineis = int(
+            quantidade_paineis
+        )
+    except (TypeError, ValueError):
+        quantidade_paineis = 1
+
+    if quantidade_paineis <= 0:
+        quantidade_paineis = 1
 
     tensao_painel = converter_float(
         painel["tensao_v"]
@@ -151,11 +159,24 @@ def verificar_compatibilidade(
         inversor["corrente_max_a"]
     )
 
+    # --------------------------------------------------------
+    # TENSÃO DA STRING
+    # --------------------------------------------------------
+
+    tensao_string = (
+        tensao_painel
+        * quantidade_paineis
+    )
+
     tensao_compativel = (
         tensao_min_inversor
-        <= tensao_painel
+        <= tensao_string
         <= tensao_max_inversor
     )
+
+    # --------------------------------------------------------
+    # CORRENTE
+    # --------------------------------------------------------
 
     corrente_compativel = (
         corrente_painel
@@ -167,7 +188,7 @@ def verificar_compatibilidade(
     if not tensao_compativel:
 
         problemas.append(
-            "A tensão do painel está fora "
+            "A tensão da string está fora "
             "da faixa aceita pelo inversor."
         )
 
@@ -189,6 +210,8 @@ def verificar_compatibilidade(
         "criterios": {
             "tensao": {
                 "painel_v": tensao_painel,
+                "quantidade_paineis": quantidade_paineis,
+                "string_v": tensao_string,
                 "min_inversor_v": (
                     tensao_min_inversor
                 ),

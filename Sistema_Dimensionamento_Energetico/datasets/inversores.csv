@@ -1,11 +1,11 @@
-fabricante,modelo,potencia_nominal_kw,potencia_fv_max_kw,tensao_min_v,tensao_max_v,corrente_max_a,mppt,compatibilidade_bateria,preco,fonte
-Growatt,MIN 2500TL-X,2.5,3.5,80,500,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
-Growatt,MIN 3000TL-X,3.0,4.2,80,500,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
-Growatt,MIN 3600TL-X,3.6,5.04,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
-Growatt,MIN 4200TL-X,4.2,5.88,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
-Growatt,MIN 4600TL-X,4.6,6.44,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
-Growatt,MIN 5000TL-X,5.0,7.0,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
-Growatt,MIN 6000TL-X,6.0,8.1,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,,https://vn.growatt.com/upload/file/MIN_2500-6000TL-X_B%E1%BA%A3ng_Th%C3%B4ng_S%E1%BB%91_EN_202306.pdf
-Deye,SUN-3.6K-G05P1-EU-CM2,3.6,5.4,80,500,13.0,2 MPPT,Não aplicável,,https://pt.deyeinverter.com/product/single-phase-string-inverter/SUN3-6-4-4-2-4-6-5-5-2-3171.html
-Deye,SUN-5K-G05P1-EU-CM2,5.0,7.5,80,550,13.0,2 MPPT,Não aplicável,,https://pt.deyeinverter.com/product/single-phase-string-inverter/SUN3-6-4-4-2-4-6-5-5-2-3171.html
-Deye,SUN-8K-G05P1-EU-CM2,8.0,12.0,80,550,26.0,2 MPPT,Não aplicável,,https://pt.deyeinverter.com/product/single-phase-string-inverter/SUN3-6-4-4-2-4-6-5-5-2-3171.html
+﻿fabricante,modelo,potencia_nominal_kw,potencia_fv_max_kw,tensao_min_v,tensao_max_v,corrente_max_a,mppt,compatibilidade_bateria,preco,fonte
+Growatt,MIC 2000TL-X,2.0,2.8,50,500,13,1 MPPT; 1 string/MPPT,Não aplicável,999.0,https://www.minhacasasolar.com.br/inversor-solar-monofasico-2kw-220v-1-mppt-growatt-mic2000tl-x-81996
+Growatt,MIC 2500TL-X,2.5,3.5,65,550,13,1 MPPT; 1 string/MPPT,Não aplicável,2590.65,https://www.portalenergy.com.br/inversor-solar-fotovoltaico-on-grid-growatt-68210-5
+Growatt,MIC 3000TL-X,3.0,4.2,65,550,13,1 MPPT; 1 string/MPPT,Não aplicável,1249.9,https://www.anhangueraenergiasolar.com.br/inversor-solar-on-grid-growatt-mic3000tl-x-3kw-monofasico-110v220v-1mppt/prod-10664645/
+Growatt,MIN 3000TL-X,3.0,4.2,80,500,13.5,2 MPPT; 1 string/MPPT,Não aplicável,2999.0,https://www.minhacasasolar.com.br/inversor-solar-monofasico-3kw-220v-2-mppt-growatt-min3000tl-x-82940
+Growatt,MIN 5000TL-X,5.0,7.0,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,3925.0,https://www.minhacasolar.com.br/inversor-solar-monofasico-5kw-220v-2-mppt-growatt-min5000tl-x-81999
+Growatt,MIN 6000TL-X,6.0,8.1,80,550,13.5,2 MPPT; 1 string/MPPT,Não aplicável,3440.07,https://www.minhacasolar.com.br/inversor-solar-monofasico-6kw-220v-2-mppt-growatt-min6000tl-x-82000
+Growatt,MIN 5000TL-X2,5.0,9.0,50,550,16,2 MPPT; 1 string/MPPT,Não aplicável,2223.44,https://www.meugerador.com.br/products/inversor-solar-ongrid-growatt-5kw-x2-220v-2mppt-min5000tl-x2-monitoramento-wifi
+Growatt,MIN 6000TL-X2,6.0,10.8,50,550,16,2 MPPT; 1 string/MPPT,Não aplicável,2335.35,https://www.meugerador.com.br/products/inversor-solar-ongrid-growatt-6kw-x2-220v-2mppt-min6000tl-x2-monitoramento-wifi
+Growatt,MIC 5000TL-X2,5.0,7.0,80,550,16,2 MPPT; 1 string/MPPT,Não aplicável,2046.0,https://www.minhacasasolar.com.br/inversor-solar-monofasico-5kw-220v-2mppt-growatt-mic5000tl-x2-afci-83988
+Growatt,MIC 2000TL-X (segunda oferta),2.0,2.8,50,500,13,1 MPPT; 1 string/MPPT,Não aplicável,1476.0,https://recargasolar.shop/produtos/microinversor-solar-2k-growatt-neo2000m-x-2kw-monofasico-220v-4mppt-monitoramento-wifi/
