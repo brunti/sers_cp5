@@ -29,6 +29,36 @@
                     "dimensionamentos": []
                 }
             ]
+        },
+        {
+            "nome": "fers",
+            "email": "fers@gmail",
+            "senha": "fers123",
+            "imoveis": [
+                {
+                    "id_imovel": 1,
+                    "nome": "casa na praia do fers",
+                    "tipo": "triplex do fers",
+                    "endereco": "copacabana 171",
+                    "cidade": "Rio de janeiro",
+                    "estado": "Rj",
+                    "latitude": null,
+                    "longitude": null,
+                    "consumos": [
+                        {
+                            "mes": 10,
+                            "ano": 2026,
+                            "consumo_kwh": 150.0
+                        },
+                        {
+                            "mes": 1,
+                            "ano": 2020,
+                            "consumo_kwh": 123.0
+                        }
+                    ],
+                    "dimensionamentos": []
+                }
+            ]
         }
     ]
 }

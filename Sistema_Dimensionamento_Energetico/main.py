@@ -227,7 +227,6 @@ def executar_dimensionamento_basico(usuario):
 
     print("\n============================================")
     print("DIMENSIONAMENTO FOTOVOLTAICO")
-    print("PB01 → PB04")
     print("============================================")
 
     # --------------------------------------------------------
