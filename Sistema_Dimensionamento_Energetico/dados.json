@@ -59,6 +59,12 @@
                     "dimensionamentos": []
                 }
             ]
+        },
+        {
+            "nome": "titi",
+            "email": "titi@gmail",
+            "senha": "titi123",
+            "imoveis": []
         }
     ]
 }
